@@ -1,3 +1,4 @@
+<!--Liam, web dev, 10/24, -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,6 +30,23 @@
     <script>
         $(document).ready(function () {
             $("#timer").addClass("timer-background");
+
+            // Apply minimal styling to the outer border, inner background, and font
+            $(".wrapper").css({
+                'border': '2px solid #333',     // Subtle dark border around the stopwatch container
+                'border-radius': '8px',         // Rounded corners for a clean look
+                'padding': '15px',              // Padding for spacing within the wrapper
+            });
+
+            $("#timer").css({
+                'background-color': '#f0f0f0',  // Light grey background for contrast
+                'color': '#333',                // Darker text color for readability
+            });
+
+            $("h1, h2").css({
+                'font-family': 'Arial, sans-serif', // Simple font choice
+                'color': '#333',                   // Dark grey font color for headings
+            });
 
             var seconds = "00";
             var tens = "00";
