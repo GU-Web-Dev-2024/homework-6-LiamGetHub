@@ -3,92 +3,103 @@
      Modified from: https://codepen.io/cathydutton/pen/GBcvo
     -->
     <!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HW6 - JQuery</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <style>
-            .timer-background {
-                background-color: #2c313b;
-                color: white;
-                font-size: 2em;
-                padding: 10px;
-                border-radius: 10px;
-                text-align: center;
-                width: fit-content;
-                margin: 20px auto;
-            }
-        </style>
-        <script>
-            $(document).ready(function () {
-                //the timer-background class to the paragraph with id="timer"
-                $("#timer").addClass("timer-background");
-    
-                var seconds = "00";
-                var tens = "00";
-                var $appendTens = $("#tens");
-                var $appendSeconds = $("#seconds");
-                var $buttonStart = $('#button-start');
-                var $buttonStop = $('#button-stop');
-                var $buttonReset = $('#button-reset');
-                var interval;
-    
-                $buttonStart.click(function () {
-                    clearInterval(interval);
-                    interval = setInterval(startTimer, 10);
-                });
-    
-                $buttonStop.click(function () {
-                    clearInterval(interval);
-                });
-    
-                $buttonReset.click(function () {
-                    clearInterval(interval);
-                    tens = "00";
-                    seconds = "00";
-                    $appendTens.html(tens);
-                    $appendSeconds.html(seconds);
-                });
-    
-                function startTimer() {
-                    tens++;
-    
-                    if (tens < 9) {
-                        $appendTens.html("0" + tens);
-                    }
-    
-                    if (tens > 9) {
-                        $appendTens.html(tens);
-                    }
-    
-                    if (tens > 99) {
-                        seconds++;
-                        $appendSeconds.html("0" + seconds);
-                        tens = 0;
-                        $appendTens.html("00");
-                    }
-    
-                    if (seconds > 9) {
-                        $appendSeconds.html(seconds);
-                    }
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW6 - JQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .timer-background {
+            background-color: grey; /* Default background color (stopped) */
+            color: white;
+            font-size: 2em;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            width: fit-content;
+            margin: 20px auto;
+        }
+
+        .timer-running {
+            background-color: rgb(51, 165, 50); /* Green background when running */
+        }
+
+        .timer-paused {
+            background-color: rgb(251, 18, 47); /* Red background when paused */
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#timer").addClass("timer-background");
+
+            var seconds = "00";
+            var tens = "00";
+            var $appendTens = $("#tens");
+            var $appendSeconds = $("#seconds");
+            var $buttonStart = $('#button-start');
+            var $buttonStop = $('#button-stop');
+            var $buttonReset = $('#button-reset');
+            var interval;
+
+            $buttonStart.click(function () {
+                clearInterval(interval);
+                interval = setInterval(startTimer, 10);
+                $("#timer").removeClass("timer-paused").addClass("timer-running");  // Set to running (green)
+            });
+
+            $buttonStop.click(function () {
+                clearInterval(interval);
+                if (seconds !== "00" || tens !== "00") {
+                    $("#timer").removeClass("timer-running").addClass("timer-paused");  // Set to paused (red) only if the timer has started
                 }
             });
-        </script>
-    </head>
-    
-    <body>
-        <div class="wrapper">
-            <h1>Stopwatch</h1>
-            <h2>jQuery Stopwatch</h2>
-            <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
-            <button id="button-start">Start</button>
-            <button id="button-stop">Stop</button>
-            <button id="button-reset">Reset</button>
-        </div>
-    </body>
-    
-    </html>
-    
+
+            $buttonReset.click(function () {
+                clearInterval(interval);
+                tens = "00";
+                seconds = "00";
+                $appendTens.html(tens);
+                $appendSeconds.html(seconds);
+                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");  // Reset to default (grey)
+            });
+
+            function startTimer() {
+                tens++;
+
+                if (tens < 9) {
+                    $appendTens.html("0" + tens);
+                }
+
+                if (tens > 9) {
+                    $appendTens.html(tens);
+                }
+
+                if (tens > 99) {
+                    seconds++;
+                    $appendSeconds.html("0" + seconds);
+                    tens = 0;
+                    $appendTens.html("00");
+                }
+
+                if (seconds > 9) {
+                    $appendSeconds.html(seconds);
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1>Stopwatch</h1>
+        <h2>jQuery Stopwatch</h2>
+        <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
+        <button id="button-start">Start</button>
+        <button id="button-stop">Stop</button>
+        <button id="button-reset">Reset</button>
+    </div>
+</body>
+
+</html>
