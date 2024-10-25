@@ -1,0 +1,122 @@
+<!-- 
+    HW6, Liam Fitting, Web dev, 10/24/24
+     Modified from: https://codepen.io/cathydutton/pen/GBcvo
+     Inspo and details from geeks for geeks and stack overflow
+    -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW6 - JQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .timer-background {
+            background-color: grey; /* Default background color (stopped) */
+            color: white;
+            font-size: 2em;
+            padding: 10px;
+            border-radius: 10px;
+            width: fit-content;
+            margin: 20px auto;
+        }
+
+        .timer-running {
+            background-color: rgb(51, 165, 50); /* Green background when running */
+        }
+
+        .timer-paused {
+            background-color: rgb(251, 18, 47); /* Red background when paused */
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#timer").addClass("timer-background");
+
+            var seconds = "00";
+            var tens = "00";
+            var $appendTens = $("#tens");
+            var $appendSeconds = $("#seconds");
+            var $buttonStart = $('#button-start');
+            var $buttonStop = $('#button-stop');
+            var $buttonReset = $('#button-reset');
+            var interval;
+            var opacityInterval;
+
+            $buttonStart.click(function () {
+                clearInterval(interval);
+                clearInterval(opacityInterval);
+                interval = setInterval(startTimer, 10);
+
+                // Animate the opacity while running
+                opacityInterval = setInterval(function () {
+                    $("#timer").animate({ opacity: 0.8 }, 500).animate({ opacity: 1.0 }, 500);
+                }, 1000);
+
+                $("#timer").removeClass("timer-paused").addClass("timer-running");
+            });
+
+            $buttonStop.click(function () {
+                clearInterval(interval);
+                clearInterval(opacityInterval);
+                $("#timer").stop().css("opacity", "1.0"); // Reset opacity when stopped
+
+                if (seconds !== "00" || tens !== "00") {
+                    $("#timer").removeClass("timer-running").addClass("timer-paused");
+                }
+            });
+
+            $buttonReset.click(function () {
+                clearInterval(interval);
+                clearInterval(opacityInterval);
+                tens = "00";
+                seconds = "00";
+                $appendTens.html(tens);
+                $appendSeconds.html(seconds);
+                $("#timer").stop().css("opacity", "1.0"); // Reset opacity when reset
+                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");
+            });
+
+            function startTimer() {
+                tens++;
+
+                if (tens < 9) {
+                    $appendTens.html("0" + tens);
+                }
+
+                if (tens > 9) {
+                    $appendTens.html(tens);
+                }
+
+                if (tens > 99) {
+                    seconds++;
+                    $appendSeconds.html("0" + seconds);
+                    tens = 0;
+                    $appendTens.html("00");
+                }
+
+                if (seconds > 9) {
+                    $appendSeconds.html(seconds);
+                }
+            }
+
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1>Stopwatch</h1>
+        <h2>jQuery Stopwatch</h2>
+        <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
+        <button id="button-start">Start</button>
+        <button id="button-stop">Stop</button>
+        <button id="button-reset">Reset</button>
+    </div>
+</body>
+
+</html>
