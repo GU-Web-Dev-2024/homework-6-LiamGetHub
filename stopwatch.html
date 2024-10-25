@@ -1,4 +1,3 @@
-<!--Liam, web dev, 10/24, -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,40 +38,27 @@
             var $buttonStop = $('#button-stop');
             var $buttonReset = $('#button-reset');
             var interval;
-            var opacityInterval;
 
             $buttonStart.click(function () {
                 clearInterval(interval);
-                clearInterval(opacityInterval);
                 interval = setInterval(startTimer, 10);
-
-                // Animate the opacity while running
-                opacityInterval = setInterval(function () {
-                    $("#timer").animate({ opacity: 0.8 }, 500).animate({ opacity: 1.0 }, 500);
-                }, 1000);
-
-                $("#timer").removeClass("timer-paused").addClass("timer-running");
+                $("#timer").removeClass("timer-paused").addClass("timer-running");  // Set to running (green)
             });
 
             $buttonStop.click(function () {
                 clearInterval(interval);
-                clearInterval(opacityInterval);
-                $("#timer").stop().css("opacity", "1.0"); // Reset opacity when stopped
-
                 if (seconds !== "00" || tens !== "00") {
-                    $("#timer").removeClass("timer-running").addClass("timer-paused");
+                    $("#timer").removeClass("timer-running").addClass("timer-paused");  // Set to paused (red) only if the timer has started
                 }
             });
 
             $buttonReset.click(function () {
                 clearInterval(interval);
-                clearInterval(opacityInterval);
                 tens = "00";
                 seconds = "00";
                 $appendTens.html(tens);
                 $appendSeconds.html(seconds);
-                $("#timer").stop().css("opacity", "1.0"); // Reset opacity when reset
-                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");
+                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");  // Reset to default (grey)
             });
 
             function startTimer() {
