@@ -25,13 +25,19 @@
         .timer-paused {
             background-color: rgb(251, 18, 47); /* Red background when paused */
         }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1em;
+        }
     </style>
     <script>
         $(document).ready(function () {
             $("#timer").addClass("timer-background");
 
-            var seconds = "00";
-            var tens = "00";
+            var seconds = 0;
+            var tens = 0;
             var $appendTens = $("#tens");
             var $appendSeconds = $("#seconds");
             var $buttonStart = $('#button-start');
@@ -42,46 +48,43 @@
             $buttonStart.click(function () {
                 clearInterval(interval);
                 interval = setInterval(startTimer, 10);
-                $("#timer").removeClass("timer-paused").addClass("timer-running");  // Set to running (green)
+                $("#timer").removeClass("timer-paused").addClass("timer-running");
+                $buttonStart.prop("disabled", true);
+                $buttonStop.prop("disabled", false);
+                $buttonReset.prop("disabled", false);
             });
 
             $buttonStop.click(function () {
                 clearInterval(interval);
-                if (seconds !== "00" || tens !== "00") {
-                    $("#timer").removeClass("timer-running").addClass("timer-paused");  // Set to paused (red) only if the timer has started
+                if (seconds !== 0 || tens !== 0) {
+                    $("#timer").removeClass("timer-running").addClass("timer-paused");
                 }
+                $buttonStart.prop("disabled", false);
+                $buttonStop.prop("disabled", true);
             });
 
             $buttonReset.click(function () {
                 clearInterval(interval);
-                tens = "00";
-                seconds = "00";
-                $appendTens.html(tens);
-                $appendSeconds.html(seconds);
-                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");  // Reset to default (grey)
+                tens = 0;
+                seconds = 0;
+                $appendTens.html("00");
+                $appendSeconds.html("00");
+                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");
+                $buttonStart.prop("disabled", false);
+                $buttonStop.prop("disabled", true);
+                $buttonReset.prop("disabled", true);
             });
 
             function startTimer() {
                 tens++;
 
-                if (tens < 9) {
-                    $appendTens.html("0" + tens);
-                }
-
-                if (tens > 9) {
-                    $appendTens.html(tens);
-                }
-
-                if (tens > 99) {
+                if (tens >= 100) {
                     seconds++;
-                    $appendSeconds.html("0" + seconds);
                     tens = 0;
-                    $appendTens.html("00");
                 }
 
-                if (seconds > 9) {
-                    $appendSeconds.html(seconds);
-                }
+                $appendTens.html(tens < 10 ? "0" + tens : tens);
+                $appendSeconds.html(seconds < 10 ? "0" + seconds : seconds);
             }
         });
     </script>
@@ -93,8 +96,8 @@
         <h2>jQuery Stopwatch</h2>
         <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
         <button id="button-start">Start</button>
-        <button id="button-stop">Stop</button>
-        <button id="button-reset">Reset</button>
+        <button id="button-stop" disabled>Stop</button>
+        <button id="button-reset" disabled>Reset</button>
     </div>
 </body>
 
