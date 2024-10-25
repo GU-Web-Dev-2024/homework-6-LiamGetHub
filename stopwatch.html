@@ -17,7 +17,6 @@
             font-size: 2em;
             padding: 10px;
             border-radius: 10px;
-            text-align: center;
             width: fit-content;
             margin: 20px auto;
         }
@@ -32,8 +31,22 @@
     </style>
     <script>
         $(document).ready(function () {
-            $("#timer").addClass("timer-background");
-
+            // Add a 'button-style' class to all buttons
+            $('#button-start, #button-stop, #button-reset').addClass('button-style');
+    
+            // Apply styles using an object literal
+            $('.button-style').css({
+                'background-color': '#007bff', // Blue background
+                'color': 'white',              // White text
+                'border': 'none',              // Remove border
+                'padding': '10px 20px',        
+                'border-radius': '5px',        
+                'font-size': '1em',            
+                'cursor': 'pointer',           
+                'margin': '10px',              
+                'box-shadow': '0px 4px 6px rgba(0, 0, 0, 0.1)' // Add subtle shadow from stack overflow
+            });
+    
             var seconds = "00";
             var tens = "00";
             var $appendTens = $("#tens");
@@ -42,20 +55,20 @@
             var $buttonStop = $('#button-stop');
             var $buttonReset = $('#button-reset');
             var interval;
-
+    
             $buttonStart.click(function () {
                 clearInterval(interval);
                 interval = setInterval(startTimer, 10);
                 $("#timer").removeClass("timer-paused").addClass("timer-running");  // Set to running (green)
             });
-
+    
             $buttonStop.click(function () {
                 clearInterval(interval);
                 if (seconds !== "00" || tens !== "00") {
                     $("#timer").removeClass("timer-running").addClass("timer-paused");  // Set to paused (red) only if the timer has started
                 }
             });
-
+    
             $buttonReset.click(function () {
                 clearInterval(interval);
                 tens = "00";
@@ -64,31 +77,32 @@
                 $appendSeconds.html(seconds);
                 $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");  // Reset to default (grey)
             });
-
+    
             function startTimer() {
                 tens++;
-
+    
                 if (tens < 9) {
                     $appendTens.html("0" + tens);
                 }
-
+    
                 if (tens > 9) {
                     $appendTens.html(tens);
                 }
-
+    
                 if (tens > 99) {
                     seconds++;
                     $appendSeconds.html("0" + seconds);
                     tens = 0;
                     $appendTens.html("00");
                 }
-
+    
                 if (seconds > 9) {
                     $appendSeconds.html(seconds);
                 }
             }
         });
     </script>
+    
 </head>
 
 <body>
