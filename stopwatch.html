@@ -8,6 +8,7 @@
     <title>HW6 - JQuery</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* Basic styles for timer display */
         .timer-background {
             background-color: grey; /* Default background color (stopped) */
             color: white;
@@ -19,6 +20,7 @@
             margin: 20px auto;
         }
 
+        /* Dynamic classes for timer state */
         .timer-running {
             background-color: rgb(51, 165, 50); /* Green background when running */
         }
@@ -26,28 +28,42 @@
         .timer-paused {
             background-color: rgb(251, 18, 47); /* Red background when paused */
         }
+
+        /* Minimal button styles */
+        .btn-style {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin: 5px;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
     <script>
         $(document).ready(function () {
+            // Timer default setup
             $("#timer").addClass("timer-background");
 
-            // Apply minimal styling to the outer border, inner background, and font
+            // Minimal styling for the outer wrapper
             $(".wrapper").css({
-                'border': '2px solid #333',     // Subtle dark border around the stopwatch container
-                'border-radius': '8px',         // Rounded corners for a clean look
-                'padding': '15px',              // Padding for spacing within the wrapper
+                'border': '2px solid #333',        // Subtle dark border around wrapper
+                'border-radius': '8px',            // Rounded edges
+                'padding': '15px',                 // Inner padding
             });
 
+            // Timer styling for visibility
             $("#timer").css({
-                'background-color': '#f0f0f0',  // Light grey background for contrast
-                'color': '#333',                // Darker text color for readability
+                'background-color': '#f0f0f0',     // Light background for timer
+                'color': '#333',                   // Dark text color
             });
 
-            $("h1, h2").css({
-                'font-family': 'Arial, sans-serif', // Simple font choice
-                'color': '#333',                   // Dark grey font color for headings
+            // Styling buttons with a single class
+            $("#button-start, #button-stop, #button-reset").addClass("btn-style").css({
+                'background-color': '#333'        // Dark color for buttons
             });
 
+            // Variables for timer functionality
             var seconds = "00";
             var tens = "00";
             var $appendTens = $("#tens");
@@ -58,29 +74,34 @@
             var interval;
             var opacityInterval;
 
+            // Start button functionality
             $buttonStart.click(function () {
                 clearInterval(interval);
                 clearInterval(opacityInterval);
                 interval = setInterval(startTimer, 10);
 
-                // Animate the opacity while running
+                // Animate opacity while running
                 opacityInterval = setInterval(function () {
                     $("#timer").animate({ opacity: 0.8 }, 500).animate({ opacity: 1.0 }, 500);
                 }, 1000);
 
+                // Update background color for running state
                 $("#timer").removeClass("timer-paused").addClass("timer-running");
             });
 
+            // Stop button functionality
             $buttonStop.click(function () {
                 clearInterval(interval);
                 clearInterval(opacityInterval);
                 $("#timer").stop().css("opacity", "1.0"); // Reset opacity when stopped
 
+                // Change to paused color only if timer has started
                 if (seconds !== "00" || tens !== "00") {
                     $("#timer").removeClass("timer-running").addClass("timer-paused");
                 }
             });
 
+            // Reset button functionality
             $buttonReset.click(function () {
                 clearInterval(interval);
                 clearInterval(opacityInterval);
@@ -88,28 +109,25 @@
                 seconds = "00";
                 $appendTens.html(tens);
                 $appendSeconds.html(seconds);
-                $("#timer").stop().css("opacity", "1.0"); // Reset opacity when reset
+                $("#timer").stop().css("opacity", "1.0"); // Reset opacity
                 $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");
             });
 
+            // Timer counting logic
             function startTimer() {
                 tens++;
-
                 if (tens < 9) {
                     $appendTens.html("0" + tens);
                 }
-
                 if (tens > 9) {
                     $appendTens.html(tens);
                 }
-
                 if (tens > 99) {
                     seconds++;
                     $appendSeconds.html("0" + seconds);
                     tens = 0;
                     $appendTens.html("00");
                 }
-
                 if (seconds > 9) {
                     $appendSeconds.html(seconds);
                 }
