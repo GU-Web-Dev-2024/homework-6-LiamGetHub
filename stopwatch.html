@@ -40,15 +40,34 @@
             var tens = 0;
             var $appendTens = $("#tens");
             var $appendSeconds = $("#seconds");
-            var $buttonStart = $('#button-start');
-            var $buttonStop = $('#button-stop');
-            var $buttonReset = $('#button-reset');
+            var $buttonStart = $('#button-start').addClass('timer-button');
+            var $buttonStop = $('#button-stop').addClass('timer-button');
+            var $buttonReset = $('#button-reset').addClass('timer-button');
             var interval;
+            var opacityInterval;
+
+            // Style for buttons using an object literal
+            var buttonStyles = {
+                backgroundColor: '#4CAF50', // Green background
+                color: 'white', // White text
+                padding: '10px 20px', // Padding
+                border: 'none', // No border
+                borderRadius: '5px', // Rounded corners
+                fontSize: '16px', // Font size
+                cursor: 'pointer' // Pointer cursor
+            };
+
+            // Apply the styles to all buttons
+            $('.timer-button').css(buttonStyles);
 
             $buttonStart.click(function () {
                 clearInterval(interval);
                 interval = setInterval(startTimer, 10);
                 $("#timer").removeClass("timer-paused").addClass("timer-running");
+        
+                // Start the opacity animation
+                opacityAnimation();
+
                 $buttonStart.prop("disabled", true);
                 $buttonStop.prop("disabled", false);
                 $buttonReset.prop("disabled", false);
@@ -56,6 +75,9 @@
 
             $buttonStop.click(function () {
                 clearInterval(interval);
+                clearInterval(opacityInterval); // Stop opacity animation
+                $("#timer").css("opacity", 1.0); // Reset opacity
+
                 if (seconds !== 0 || tens !== 0) {
                     $("#timer").removeClass("timer-running").addClass("timer-paused");
                 }
@@ -65,11 +87,13 @@
 
             $buttonReset.click(function () {
                 clearInterval(interval);
+                clearInterval(opacityInterval); // Stop opacity animation
                 tens = 0;
                 seconds = 0;
                 $appendTens.html("00");
                 $appendSeconds.html("00");
-                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background");
+                $("#timer").removeClass("timer-running timer-paused").addClass("timer-background").css("opacity", 1.0); // Reset to default and opacity
+
                 $buttonStart.prop("disabled", false);
                 $buttonStop.prop("disabled", true);
                 $buttonReset.prop("disabled", true);
@@ -86,7 +110,32 @@
                 $appendTens.html(tens < 10 ? "0" + tens : tens);
                 $appendSeconds.html(seconds < 10 ? "0" + seconds : seconds);
             }
+
+            function opacityAnimation() {
+                // Alternate opacity between 0.8 and 1.0
+                var increasing = true;
+                opacityInterval = setInterval(function () {
+                    var currentOpacity = parseFloat($("#timer").css("opacity"));
+
+                    if (increasing) {
+                        currentOpacity += 0.01;
+                        if (currentOpacity >= 1.0) {
+                            currentOpacity = 1.0;
+                            increasing = false; // Change direction
+                        }
+                    } else {
+                        currentOpacity -= 0.01;
+                        if (currentOpacity <= 0.8) {
+                            currentOpacity = 0.8;
+                            increasing = true; // Change direction
+                        }
+                    }
+
+                    $("#timer").css("opacity", currentOpacity);
+                }, 100); // Adjust interval timing for smoothness
+            }
         });
+
     </script>
 </head>
 
